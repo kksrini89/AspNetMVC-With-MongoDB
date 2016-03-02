@@ -11,25 +11,20 @@ using System.Web.Mvc;
 namespace SampleAspNetMVC_MongoDB.Controllers
 {
     public class CarsController : Controller
-    {
-        public IMongoClient Client;
-        public IMongoDatabase Database;
-        public CarsController()
-        {
-            Client = new MongoClient(Settings.Default.SampleConnectionString);
-            Database = Client.GetDatabase("sample");
-        }
+    {       
+        private readonly MongoDBContext context = new MongoDBContext();
+       
         // GET: Cars
         public ActionResult Index()
-        {
-            var cars = Database.GetCollection<Car>("car");
+        {   
             List<Car> lists = new List<Car>();
-            using (var documentList = cars.Find(new BsonDocument()).ToCursor()) //Gets all documents
+            using (var documentList = context.Cars.Find(new BsonDocument()).ToCursor()) //Gets all documents
             {
                 while (documentList.MoveNext())
                 {
                     foreach (var item in documentList.Current)
                     {
+
                         lists.Add(item);
                     }
                 }
@@ -42,11 +37,10 @@ namespace SampleAspNetMVC_MongoDB.Controllers
             return View();
         }
 
-        [HttpPost]     
+        [HttpPost]
         public ActionResult Post(Car car)
-        {
-            var collection = Database.GetCollection<Car>("car");
-            collection.InsertOne(car);
+        {            
+            context.Cars.InsertOne(car);
             return RedirectToAction("Index");
         }
     }
