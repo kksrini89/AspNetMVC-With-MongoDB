@@ -36,9 +36,7 @@ namespace SampleAspNetMVC_MongoDB.Controllers
                 }
             }
 
-            var count = collection.Count(new BsonDocument()); //Shows count of documents for a particular collection
-            //var db = client.ListDatabasesAsync().Result;
-            //db.MoveNextAsync();            
+            var count = collection.Count(new BsonDocument()); //Shows count of documents for a particular collection                      
             return Json(lists, JsonRequestBehavior.AllowGet);
         }
 
